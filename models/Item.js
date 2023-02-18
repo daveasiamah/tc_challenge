@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
-const { schema } = require("./User");
 
 const Schema = mongoose.Schema;
 
@@ -30,7 +29,7 @@ const ItemSchema = new Schema({
   date_updated: { type: Date, default: Date.now },
 });
 
-schema.plugin(mongoosePaginate);
+ItemSchema.plugin(mongoosePaginate);
 
 const myCustomLabels = {
   totalDocs: "itemCount",
@@ -53,6 +52,6 @@ const options = {
   customLabels: myCustomLabels,
 };
 
-Item.paginate({}, options);
-
 module.exports = mongoose.model("Item", ItemSchema);
+
+Item.paginate({}, options);

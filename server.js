@@ -21,6 +21,8 @@ const items = require("./routes/api/items");
 const users = require("./routes/api/users");
 const login = require("./routes/api/login");
 const register = require("./routes/api/register");
+const gateways = require("./routes/api/gateways");
+const devices = require("./routes/api/devices");
 
 //Logging Requests to Server
 app.use(morgan("dev"));
@@ -51,6 +53,8 @@ app.use("/api/items", items);
 app.use("/api/users", users);
 app.use("/api/login", login);
 app.use("/api/register", register);
+app.use("/api/gateways", gateways);
+app.use("/api/devices", devices);
 
 /** GET /api-status - Check service status **/
 router.get("/", (req, res) =>
@@ -63,7 +67,7 @@ router.get("/", (req, res) =>
 router.get("/api", (req, res) =>
   res.json({
     status: "ok",
-    Message: "Welcome to WebShop API!",
+    Message: "Welcome to Gateways API!",
   })
 );
 

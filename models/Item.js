@@ -53,5 +53,3 @@ const options = {
 };
 
 module.exports = mongoose.model("Item", ItemSchema);
-
-Item.paginate({}, options);

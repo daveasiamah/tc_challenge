@@ -3,8 +3,6 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const morgan = require("morgan");
-const config = require("config");
-const passport = require("passport");
 const router = express.Router();
 const app = express();
 
@@ -35,8 +33,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
-app.use(passport.initialize());
-require("./config/passport")(passport);
 
 //Use Routes
 app.use("/", router);

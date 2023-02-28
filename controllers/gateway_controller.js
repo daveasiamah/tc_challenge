@@ -13,7 +13,7 @@ async function getAllGateways(req, res, next) {
       { page, limit, populate: "devices" }
     );
 
-    res.json(gateways);
+    res.status(200).json(gateways);
   } catch (err) {
     console.log(err);
     next(err);
@@ -58,7 +58,7 @@ async function createGateway(req, res, next) {
       ipAddress,
       devices,
     });
-    res.status(201).json({ data: gateway });
+    res.status(201).json(gateway);
   } catch (err) {
     console.error(err);
     next(err);
@@ -89,15 +89,15 @@ async function updateGateway(req, res, next) {
   }
 }
 
-//Remove a device from a gateway
-async function removeDeviceFromGateway(req, res, next) {
+//Delete a device from a gateway
+async function deleteDeviceFromGateway(req, res, next) {
   try {
-    const { id } = req.params;
-    const { deviceId } = req.body;
+    // const { id } = req.params;
+    // const { deviceId } = req.params.devices;
 
     const updatedGateway = await Gateway.findByIdAndUpdate(
-      id,
-      { $pull: { devices: deviceId } },
+      req.params.id,
+      { $pull: { devices: req.params.deviceId } },
       { new: true }
     ).populate("devices");
 
@@ -105,6 +105,9 @@ async function removeDeviceFromGateway(req, res, next) {
       throw createError(404, "Gateway not found.");
     }
 
+    console.table({
+      data: { gateway: req.params.id, device: req.params.deviceId },
+    });
     res.status(200).json({ data: updatedGateway });
   } catch (error) {
     console.log(error);
@@ -120,7 +123,7 @@ async function deleteGateway(req, res) {
       .status(404)
       .send("The Gateway you are trying to delete was not found.");
 
-  res.send(gateway);
+  res.status(200).json(gateway);
 }
 
 module.exports = {
@@ -128,6 +131,6 @@ module.exports = {
   getGateway,
   createGateway,
   updateGateway,
-  removeDeviceFromGateway,
+  deleteDeviceFromGateway,
   deleteGateway,
 };

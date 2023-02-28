@@ -3,24 +3,13 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const morgan = require("morgan");
-const config = require("config");
-const passport = require("passport");
 const router = express.Router();
 const app = express();
-
-if (!config.get("PrivateKey")) {
-  console.error("FATAL ERROR: PrivateKey is not defined.");
-  process.exit(1);
-}
 
 //connect to the database
 connectDB();
 
 //Loading endpoints
-const items = require("./routes/api/items");
-const users = require("./routes/api/users");
-const login = require("./routes/api/login");
-const register = require("./routes/api/register");
 const gateways = require("./routes/api/gateways");
 const devices = require("./routes/api/devices");
 
@@ -44,15 +33,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
-app.use(passport.initialize());
-require("./config/passport")(passport);
 
 //Use Routes
 app.use("/", router);
-app.use("/api/items", items);
-app.use("/api/users", users);
-app.use("/api/login", login);
-app.use("/api/register", register);
 app.use("/api/gateways", gateways);
 app.use("/api/devices", devices);
 

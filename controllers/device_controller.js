@@ -27,33 +27,38 @@ async function getAllDevices(req, res, next) {
       limit: pageSize,
       sort: "name",
     };
-    const result = await Device.paginate({}, options);
 
-    res.status(200).json({ data: result });
+    const devices = await Device.paginate({}, options);
+
+    res.status(200).json(devices);
   } catch (err) {
     next(err);
   }
 }
 
 // Get a single device by ID
-async function getDevice(req, res) {
-  const device = await Device.findById(req.params.id);
-  if (!device) return res.status(404).send("Device not found.");
+async function getDevice(req, res, next) {
+  try {
+    const device = await Device.findById(req.params.id);
+    if (!device) return res.status(404).send("Device not found.");
 
-  res.send(device);
+    res.send(device);
+  } catch (error) {
+    next(err);
+  }
 }
 
 // Create a new device
 async function createDevice(req, res, next) {
   try {
-    const { uid, vendor, status, gateway } = req.body;
+    const { uid, vendor, status } = req.body;
 
-    // const { error } = validateDevice({ uid, vendor, status, gateway });
-    // if (error) {
-    //   throw createError(400, error.details[0].message);
-    // }
+    const { error } = validateDevice({ uid, vendor, status });
+    if (error) {
+      throw createError(400, error.details[0].message);
+    }
 
-    const device = await Device.create({ uid, vendor, status, gateway });
+    const device = await Device.create({ uid, vendor, status });
 
     res.status(201).json({ data: device });
   } catch (err) {
@@ -63,31 +68,39 @@ async function createDevice(req, res, next) {
 }
 
 // Update an existing device by ID
-async function updateDevice(req, res) {
+async function updateDevice(req, res, next) {
   const { error } = validateDevice(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const device = await Device.findByIdAndUpdate(
-    req.params.id,
-    {
-      serialNumber: req.body.serialNumber,
-      name: req.body.name,
-      ipAddress: req.body.ipAddress,
-    },
-    { new: true }
-  );
+  try {
+    const device = await Device.findByIdAndUpdate(
+      req.params.id,
+      {
+        serialNumber: req.body.serialNumber,
+        name: req.body.name,
+        ipAddress: req.body.ipAddress,
+      },
+      { new: true }
+    );
 
-  if (!device) return res.status(404).send("Device not found.");
+    if (!device) return res.status(404).send("Device not found.");
 
-  res.send(device);
+    res.send(device);
+  } catch (error) {
+    next(error);
+  }
 }
 
 // Delete a device by ID
-async function deleteDevice(req, res) {
-  const device = await device.findByIdAndRemove(req.params.id);
-  if (!device) return res.status(404).send("Device not found.");
+async function deleteDevice(req, res, next) {
+  try {
+    const device = await device.findByIdAndRemove(req.params.id);
+    if (!device) return res.status(404).send("Device not found.");
 
-  res.send(device);
+    res.send(device);
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {

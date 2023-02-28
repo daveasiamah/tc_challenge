@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-// // Get Mongoose to use the global promise library
-// mongoose.Promise = global.Promise;
 const ENV = require("dotenv");
 ENV.config();
 

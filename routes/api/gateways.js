@@ -13,7 +13,12 @@ router
   .route("/:id")
   .get(gatewayController.getGateway)
   .put(gatewayController.updateGateway)
-  .delete(gatewayController.deleteGateway)
-  .patch(gatewayController.removeDeviceFromGateway);
+  .delete(gatewayController.deleteGateway);
+
+//route /api/gateways/:id/devices/:deviceId
+router.delete(
+  "/:id/devices/:deviceId",
+  gatewayController.deleteDeviceFromGateway
+);
 
 module.exports = router;
